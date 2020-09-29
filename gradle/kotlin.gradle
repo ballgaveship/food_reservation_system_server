@@ -1,0 +1,55 @@
+apply plugin: "org.jetbrains.kotlin.jvm"
+apply plugin: "kotlin-noarg"
+apply plugin: 'kotlin-spring'
+apply plugin: 'kotlin-jpa'
+apply plugin: 'kotlin-allopen'
+
+// Custom configuration for metadata
+// In IntelliJ IDEA:
+// Make sure Spring Boot plugin in enabled in menu File | Settings | Plugins | Spring Boot
+// Enable annotation processing via menu File | Settings | Build, Execution, Deployement | Compiler | Annotation Processors | Enable annotation processing
+// Since Kapt is not yet integrated in IDEA, you need to run manually the command ./gradlew kaptKotlin to generate the metadata
+apply plugin: "kotlin-kapt"
+
+compileKotlin {
+    kotlinOptions {
+        javaParameters = true // Useful for reflection.
+        freeCompilerArgs += [
+                "-Xjsr305=strict", 
+                "-Xjvm-default=enable"
+        ]
+        jvmTarget = VERSIONS.jdkVersion
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        javaParameters = true // Useful for reflection.
+        freeCompilerArgs += [
+                "-Xjsr305=strict",
+                "-Xjvm-default=enable"
+        ]
+        jvmTarget = VERSIONS.jdkVersion
+    }
+}
+
+allOpen {
+    annotations(
+            "javax.persistence.Entity",
+            "javax.persistence.Embeddable",
+            "javax.persistence.MappedSuperclass"
+    )
+}
+
+dependencies {
+    // kotlin
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${VERSIONS.kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${VERSIONS.kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${VERSIONS.kotlinVersion}")
+    implementation("io.github.microutils:kotlin-logging:${VERSIONS.kotlinLoggingVersion}")
+    implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
+
+    // annotation
+    kapt('org.springframework.boot:spring-boot-configuration-processor')
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+}

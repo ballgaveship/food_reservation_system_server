@@ -1,0 +1,19 @@
+apply plugin: 'nu.studer.jooq'
+
+sourceSets {
+    main {
+        java {
+            srcDir "src/main/java"
+        }
+    }
+}
+
+dependencies {
+    jooqGenerator('org.jooq:jooq')
+    jooqGenerator('org.jooq:jooq-meta')
+    jooqGenerator('org.jooq:jooq-meta-extensions')
+    jooqGenerator('org.jooq:jooq-codegen')
+    jooqGenerator('org.reactivestreams:reactive-streams')
+    jooqGenerator('org.postgresql:postgresql')
+    jooqGenerator('javax.xml.bind:jaxb-api')
+}

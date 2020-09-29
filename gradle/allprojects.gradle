@@ -1,0 +1,40 @@
+apply from: 'gradle/yaml.gradle'
+
+allprojects { it ->
+	apply plugin: 'eclipse'
+	apply plugin: 'idea'
+
+	def profiles = System.getenv().containsKey("GRADLE_ENV") ? System.getenv("GRADLE_ENV") : 'dev'
+
+	def envFile = file("${it.project.getRootDir()}/gradle/environments.gradle")
+	def appFile = file("app.yml")
+	def appConfig = {}
+	if (appFile.exists()) {
+		def configs = yaml.loadAll(appFile.newInputStream())
+		for (config in configs) {
+			if(config.profiles == null) {
+				project.logger.quiet('profile is null')
+			} else if (profiles == config.profiles) {
+				appConfig = config
+			}
+		}
+	}
+
+	def parsedConfig = new ConfigSlurper(profiles).parse(envFile.toURI().toURL())
+
+	ext {
+		env = parsedConfig
+		app = appConfig
+	}
+
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+
+	group = projectGroup
+	status = project.hasProperty('profile') ? project.getProperty('profile') : 'dev'
+}

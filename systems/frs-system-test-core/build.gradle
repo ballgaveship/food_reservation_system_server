@@ -1,0 +1,20 @@
+apply from: SPRINGBOOT_GRADLE
+apply from: KOTLIN_GRADLE
+
+dependencies {
+    implementation("com.epages:restdocs-api-spec-webtestclient")
+
+    implementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    implementation('org.junit.jupiter:junit-jupiter-api')
+    runtimeOnly('org.junit.jupiter:junit-jupiter-engine')
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

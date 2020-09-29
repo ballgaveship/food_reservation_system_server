@@ -1,0 +1,13 @@
+// dependencies: org.springframework.boot:spring-boot-gradle-plugin
+apply plugin: "org.springframework.boot"
+
+// Junit 5
+test {
+    useJUnitPlatform()
+    testLogging {
+        events('passed', 'skipped', 'failed')
+    }
+}
+
+//testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.3")
+//testImplementation("io.kotlintest:kotlintest-extensions-spring:3.3.3")

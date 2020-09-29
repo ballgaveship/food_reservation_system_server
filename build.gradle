@@ -1,0 +1,91 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+
+    def versions = new Properties()
+    if (file("$rootDir/version.properties").exists()) {
+        file("$rootDir/version.properties").withInputStream { versions.load(it) }
+    }
+
+    extensions.add("VERSIONS", versions)
+    project.logger.quiet("######### external versions loaded #########")
+
+    dependencies {
+        // dependency manager
+        classpath ("io.spring.gradle:dependency-management-plugin:${VERSIONS.dependencyManagementVersion}")
+
+        // spring boot
+        classpath ("org.springframework.boot:spring-boot-gradle-plugin:${VERSIONS.springBootVersion}")
+
+        // liquibase
+        classpath ("org.liquibase:liquibase-core:${VERSIONS.liquibaseVersion}")
+        classpath ("org.liquibase:liquibase-gradle-plugin:${VERSIONS.liquibasePluginVersion}")
+
+        // kotlin
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${VERSIONS.kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:${VERSIONS.kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:${VERSIONS.kotlinVersion}")
+        
+        // http client
+        classpath("com.squareup.okhttp3:okhttp:${VERSIONS.okHttpVersion}")
+        classpath("com.squareup.okhttp3:logging-interceptor:${VERSIONS.okHttpVersion}")
+
+        // jooq
+        classpath("nu.studer:gradle-jooq-plugin:${VERSIONS.jooqPluginVersion}")
+
+        //documentation
+        //asciidoc
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:$VERSIONS.asciidoctorVersion")
+
+        // restdocs-api-spec (generate api-spec for based on spring rest doc)
+        classpath("com.epages:restdocs-api-spec-gradle-plugin:$VERSIONS.restdocEpageVersion")
+
+        classpath("org.asciidoctor:asciidoctorj-pdf:$VERSIONS.asciidocterPdfVersion")
+        // aws
+        classpath("com.amazonaws:aws-java-sdk-core:$VERSIONS.awsSdkVersion")
+
+        // ssh
+        classpath("org.hidetake:gradle-ssh-plugin:$VERSIONS.sshPluginVersion")
+    }
+
+    ext {
+        SSH_GRADLE = "$rootDir/gradle/ssh.gradle"
+        DOCKER_JIB_GRADLE = "$rootDir/gradle/jib.gradle"
+        SPRINGBOOT_GRADLE = "$rootDir/gradle/springboot.gradle"
+        KOTLIN_GRADLE = "$rootDir/gradle/kotlin.gradle"
+        REACTIVE_GRADLE = "$rootDir/gradle/reactive.gradle"
+        JOOQ_GRADLE = "$rootDir/gradle/jooq.gradle"
+        LIQUIBASE_GRADLE = "$rootDir/gradle/liquibase.gradle"
+        DOCUMENT_GRADLE = "$rootDir/gradle/document.gradle"
+    }
+
+    // Display current environment variable
+    // see default.gradle to set the environment up
+    def environment = System.getenv().containsKey("GRADLE_ENV") ? System.getenv("GRADLE_ENV") : 'dev'
+    logger.quiet("######### current env: " + environment + " #########")
+}
+
+apply from: 'gradle/allprojects.gradle'
+apply from: 'gradle/default.gradle'
+
+idea {
+    module {
+
+        def kaptMain = file("${project.buildDir}/generated/source/kapt/main")
+        sourceDirs += kaptMain
+        generatedSourceDirs += kaptMain
+
+        outputDir file("${project.buildDir}/classes/main")
+        testOutputDir file("${project.buildDir}/classes/test")
+    }
+}
+
+// minimum version of java
+if (!JavaVersion.current().java11Compatible)
+    throw new GradleException("templates requires Java 11, please upgrade to at least 11")

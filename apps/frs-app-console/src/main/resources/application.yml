@@ -1,0 +1,29 @@
+#####################################
+## Common
+#####################################
+server:
+  port: 9010
+
+spring:
+  application:
+    name: frs-console
+  main:
+    allow-bean-definition-overriding: true
+  output:
+    ansi:
+      enabled: never
+
+---
+spring:
+  profiles:
+    - dev
+
+---
+spring:
+  profiles:
+    - preprod
+
+---
+spring:
+  profiles:
+    - prod
