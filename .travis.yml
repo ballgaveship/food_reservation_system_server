@@ -3,12 +3,17 @@ language: java
 jdk:
   - openjdk11
 
+branches:
+  only:
+    - master
+
 cache:
   bundler: true
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-before_script: "chmod +x .gradlew"
+before_script:
+  - chmod +x gradlew
 # clean 후 Build (Build시 자동으로 test 수행)
 script: "./gradlew clean build"
