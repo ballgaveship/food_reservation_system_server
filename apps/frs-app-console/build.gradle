@@ -1,0 +1,67 @@
+apply from: SPRINGBOOT_GRADLE
+apply from: KOTLIN_GRADLE
+apply from: REACTIVE_GRADLE
+apply from: DOCKER_JIB_GRADLE
+
+
+dependencies {
+    // spring boot
+    implementation('org.springframework.boot:spring-boot-starter-webflux')
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
+
+    // micrometer
+    implementation('io.micrometer:micrometer-registry-cloudwatch')
+
+    // util
+    implementation('au.com.console:kassava')
+
+    // project
+    implementation project(':frs-system-core')
+    testImplementation project(':frs-system-test-core')
+
+    // validation
+    kapt('org.hibernate:hibernate-validator-annotation-processor')
+    annotationProcessor('org.hibernate:hibernate-validator-annotation-processor')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation('org.junit.jupiter:junit-jupiter-api')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+    testRuntimeOnly('com.h2database:h2')
+}
+
+bootRun {
+    systemProperty "spring.profiles.active", "${app.profiles}"
+    systemProperty "application.version", "${app.version}"
+}
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = true
+}
+
+// use JAVA_TOOL_OPTIONS for additional properties
+jib {
+    from {
+        image = 'adoptopenjdk/openjdk11:alpine-jre'
+    }
+    to {
+        // If you want to change aws credential, use environment variable in gradle task.(AWS_PROFILE={profile})
+        image =  "${app.docker.registryHost}"
+        tags = ["${app.version}".toString(), "latest"]
+    }
+    allowInsecureRegistries = true
+    container {
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        ports = ['9010']
+        environment = [
+                "TZ": "UTC",
+                "APPLICATION.VERSION": version,
+                "SPRING.PROFILES.ACTIVE": System.getenv().containsKey("GRADLE_ENV") ? System.getenv("GRADLE_ENV") : 'dev'
+        ]
+    }
+}

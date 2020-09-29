@@ -1,0 +1,53 @@
+apply plugin: "org.asciidoctor.convert" // Apply the Asciidoctor plugin
+apply plugin: 'com.epages.restdocs-api-spec' // Apply E-Page rest doc plugin - for generate OpenAPI Spec
+
+dependencies {
+    asciidoctor ('org.springframework.restdocs:spring-restdocs-asciidoctor')
+    testImplementation("com.epages:restdocs-api-spec-webtestclient")
+}
+
+openapi3 {
+    server = 'https://api.cloudplex.dev.megazone.io'
+    title = 'DESKTOP CONSOLE API'
+    description = 'DESKTOP DESKTOP API'
+    version = version
+    format = 'yaml'
+    outputFileNamePrefix = version
+    outputDirectory = file("${projectDir}/src/docs/openapi3")
+    tagDescriptionsPropertiesFile = 'src/docs/openapi3/tag-descriptions.yaml'
+    oauth2SecuritySchemeDefinition = {
+        flows = ['clientCredentials']
+        tokenUrl = 'https://authorize.megazoneauth.com/oauth/token'
+    }
+}
+
+task addOauthSecurity(dependsOn: 'openapi3') {
+    group "documentation"
+
+    doLast {
+        file("${projectDir}/src/docs/openapi3/${version}.yaml").append('security:\n  - oauth2: []')
+    }
+}
+
+postman {
+    title = 'DESKTOP CONSOLE API'
+    version = version
+    baseUrl = 'https://api.cloudplex.dev.megazone.io'
+    separatePublicApi = true
+    outputFileNamePrefix = version
+}
+
+asciidoctor {
+    sourceDir file("${projectDir}/src/docs")
+    sources {
+        include 'index.adoc'
+    }
+    outputDir file("${projectDir}/src/docs")
+    backends = ['html5']
+    attributes = [
+            doctype: 'book',
+            toc: 'left',
+            toclevels: '3',
+            generated: file("${projectDir}/src/docs")
+    ]
+}

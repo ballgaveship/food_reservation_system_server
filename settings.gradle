@@ -1,0 +1,102 @@
+rootProject.name = 'frs_server'
+
+['apps'].each {
+    def projectDir = new File(rootDir, it)
+
+    if( !projectDir.exists() ) {
+        projectDir.mkdirs()
+    }
+
+    ['frs-app-console'].each {
+        def subProjectDir = new File(projectDir, it)
+
+        if( !subProjectDir.exists() ) {
+            subProjectDir.mkdirs()
+        }
+
+        include ":${it}"
+        project(":${it}").projectDir = new File(subProjectDir.absolutePath)
+    }
+}
+
+['core'].each {
+    def projectDir = new File(rootDir, it)
+
+    if( !projectDir.exists() ) {
+        projectDir.mkdirs()
+    }
+
+    ['frs-core'].each {
+        def subProjectDir = new File(projectDir, it)
+
+        if( !subProjectDir.exists() ) {
+            subProjectDir.mkdirs()
+        }
+
+        include ":${it}"
+        project(":${it}").projectDir = new File(subProjectDir.absolutePath)
+    }
+}
+
+['domains'].each {
+    def projectDir = new File(rootDir, it)
+
+    if( !projectDir.exists() ) {
+        projectDir.mkdirs()
+    }
+}
+
+['clients'].each {
+    def projectDir = new File(rootDir, it)
+
+    if( !projectDir.exists() ) {
+        projectDir.mkdirs()
+    }
+}
+
+// 시스템, 도메인의 비지니스와 전혀 별게로 자체 제작한 라이브러리 같은 모듈
+['infra'].each {
+    def projectDir = new File(rootDir, it)
+
+    if( !projectDir.exists() ) {
+        projectDir.mkdirs()
+    }
+}
+
+['provision'].each {
+    def projectDir = new File(rootDir, it)
+
+    if( !projectDir.exists() ) {
+        projectDir.mkdirs()
+    }
+
+    ['frs-pvs'].each {
+        def subProjectDir = new File(projectDir, it)
+
+        if( !subProjectDir.exists() ) {
+            subProjectDir.mkdirs()
+        }
+
+        include ":${it}"
+        project(":${it}").projectDir = new File(subProjectDir.absolutePath)
+    }
+}
+
+['systems'].each {
+    def projectDir = new File(rootDir, it)
+
+    if( !projectDir.exists() ) {
+        projectDir.mkdirs()
+    }
+
+    ['frs-system-core', 'frs-system-test-core'].each {
+        def subProjectDir = new File(projectDir, it)
+
+        if( !subProjectDir.exists() ) {
+            subProjectDir.mkdirs()
+        }
+
+        include ":${it}"
+        project(":${it}").projectDir = new File(subProjectDir.absolutePath)
+    }
+}

@@ -1,0 +1,129 @@
+subprojects { it ->
+
+//	apply plugin: 'application'
+	apply plugin: 'java-library'
+	apply plugin: 'io.spring.dependency-management'
+
+	compileJava {
+		sourceCompatibility = VERSIONS.jdkVersion
+		targetCompatibility = VERSIONS.jdkVersion
+	}
+
+	[compileJava, compileTestJava, javadoc]*.options*.encoding = "UTF-8"
+
+	dependencies {
+		// add common dependencies here!!
+		// implementation("com.google.guava:guava")
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom("io.spring.platform:platform-bom:${VERSIONS.springIOPlatformVersion}")
+			mavenBom("org.springframework.cloud:spring-cloud-dependencies:${VERSIONS.springCloudPlatformVersion}")
+			mavenBom("org.springframework.data:spring-data-releasetrain:${VERSIONS.springDataVersion}")
+			mavenBom("software.amazon.awssdk:bom:${VERSIONS.awsSdk2Version}")
+			mavenBom("com.amazonaws:aws-java-sdk-bom:${VERSIONS.awsSdkVersion}")
+
+			dependencies {
+				// jooq
+				dependency("org.jooq:jooq:${VERSIONS.jooqVersion}")
+				dependency("com.github.t9t.jooq:jooq-postgresql-json:${VERSIONS.jooqJsonVersion}")
+
+				// logging
+				dependency("io.github.microutils:kotlin-logging:$VERSIONS.kotlinLoggingVersion")
+
+				// dynamodb
+				dependency("io.github.boostchicken:spring-data-dynamodb:$VERSIONS.dynamoDbVersion")
+
+				// jdbc
+				dependency("org.postgresql:postgresql:$VERSIONS.postgresConnectorVersion")
+
+				// reactivefeign
+				dependency("com.playtika.reactivefeign:feign-reactor-core:$VERSIONS.feignReactorVersion")
+				dependency("com.playtika.reactivefeign:feign-reactor-cloud:$VERSIONS.feignReactorVersion")
+				dependency("com.playtika.reactivefeign:feign-reactor-webclient:$VERSIONS.feignReactorVersion")
+				dependency("com.playtika.reactivefeign:feign-reactor-spring-configuration:$VERSIONS.feignReactorVersion")
+
+				// validation
+				dependency("org.hibernate:hibernate-validator:$VERSIONS.hibernateValidatorVersion")
+				dependency("org.hibernate:hibernate-validator-annotation-processor:$VERSIONS.hibernateValidatorVersion")
+				dependency("org.hibernate:hibernate-validator-cdi:$VERSIONS.hibernateValidatorVersion")
+				dependency("com.worldturner.medeia:medeia-validator-jackson:$VERSIONS.medeiaVersion")
+
+				// reactorExtra
+				dependency("io.projectreactor.addons:reactor-extra:$VERSIONS.reactorVersion")
+				dependency("io.projectreactor:reactor-tools:$VERSIONS.reactorVersion")
+
+				// caffeine
+				dependency("com.github.ben-manes.caffeine:caffeine:$VERSIONS.caffeineVersion")
+
+				// kms
+				dependency("org.zalando:spring-cloud-config-aws-kms:$VERSIONS.zalandoKmsVersion")
+
+				// micrometer
+				dependency("io.micrometer:micrometer-registry-cloudwatch:$VERSIONS.micrometerVersion")
+
+				// test
+				dependency("io.projectreactor.tools:blockhound-junit-platform:$VERSIONS.blockhoundVersion")
+
+				// security
+				dependency("com.nimbusds:nimbus-jose-jwt:${VERSIONS.nimbusjoseVersion}")
+				dependency("com.nimbusds:oauth2-oidc-sdk:${VERSIONS.nimbusoidcVersion}")
+				dependency("org.passay:passay:${VERSIONS.passayVersion}")
+
+				// documentation
+				dependency("com.epages:restdocs-api-spec-webtestclient:$VERSIONS.restdocEpageVersion")
+
+				// jakarta
+				dependency("jakarta.annotation:jakarta.annotation-api:$VERSIONS.jakartaAnnotationVersion")
+
+				// util
+				dependency("org.modelmapper:modelmapper:${VERSIONS.modelmapperVersion}")
+				dependency("org.simpleflatmapper:sfm-jdbc:${VERSIONS.simpleFlatMapperJdbcVersion}")
+				dependency("org.simpleflatmapper:sfm-jooq:${VERSIONS.simpleFlatMapperJdbcVersion}")
+				dependency("com.google.guava:guava:${VERSIONS.guavaVersion}")
+				dependency("com.vladmihalcea:hibernate-types-52:${VERSIONS.hibernateTypesVersion}")
+				dependency("org.testcontainers:junit-jupiter:${VERSIONS.testcontainersVersion}")
+				dependency("org.testcontainers:postgresql:${VERSIONS.testcontainersVersion}")
+				dependency("com.cronutils:cron-utils:${VERSIONS.cronUtilVersion}")
+				dependency("de.huxhorn.sulky:de.huxhorn.sulky.ulid:${VERSIONS.ulidVersion}")
+				dependency("org.mongodb:bson:${VERSIONS.bsonVersion}")
+
+				// aws
+				dependency("com.amazonaws:aws-encryption-sdk-java:${VERSIONS.awsSdkEncryptionVersion}")
+
+				// kassava
+				dependency("au.com.console:kassava:${VERSIONS.kassavaVersion}")
+			}
+		}
+	}
+
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
+
+	task initBaseSrc {
+		doLast {
+			def buildGradleFile = new File(it.project.projectDir, "build.gradle")
+			if (!buildGradleFile.exists()) {
+				buildGradleFile.createNewFile()
+			}
+
+			def appYmlFile = new File(it.project.projectDir, "app.yml")
+			if (!appYmlFile.exists()) {
+				appYmlFile.createNewFile()
+			}
+
+			it.project.sourceSets*.allSource.srcDirTrees.flatten().dir.each { dir ->
+				dir.mkdirs()
+			}
+			
+			def applicationYmlFile = new File(it.project.sourceSets.main.resources.srcDirs[0].toString(), "application.yml")
+			if (!applicationYmlFile.exists()) {
+				applicationYmlFile.createNewFile()
+			}
+		}
+	}
+}
