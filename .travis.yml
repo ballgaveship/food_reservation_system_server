@@ -22,3 +22,8 @@ deploy:
   skip_cleanup: true
   provider: script
   script: "./gradlew :frs-app-console:jib"
+
+notifications:
+  email:
+    recipients:
+      - ballgaveship@gmail.com
