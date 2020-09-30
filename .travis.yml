@@ -15,5 +15,9 @@ cache:
 
 before_install:
   - chmod +x gradlew
-# clean 후 Build (Build시 자동으로 test 수행)
-script: "./gradlew clean build"
+
+script: "./gradlew :frs-app-console:build"
+
+deploy:
+  provider: script
+  script: "./gradlew :frs-app-console:jib"
