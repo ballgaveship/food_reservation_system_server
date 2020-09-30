@@ -19,5 +19,6 @@ before_install:
 script: "./gradlew :frs-app-console:build"
 
 deploy:
+  skip_cleanup: true
   provider: script
   script: "./gradlew :frs-app-console:jib"
