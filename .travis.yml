@@ -18,6 +18,5 @@ before_install:
 
 script: "./gradlew :frs-app-console:build"
 
-deploy:
-  provider: script
-  script: "./gradlew :frs-app-console:jib"
+before_deploy:
+  - ./gradlew :frs-app-console:jib
