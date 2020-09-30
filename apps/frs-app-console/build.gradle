@@ -3,7 +3,6 @@ apply from: KOTLIN_GRADLE
 apply from: REACTIVE_GRADLE
 apply from: DOCKER_JIB_GRADLE
 
-
 dependencies {
     // spring boot
     implementation('org.springframework.boot:spring-boot-starter-webflux')
@@ -60,8 +59,8 @@ jib {
         ports = ['9010']
         environment = [
                 "TZ": "UTC",
-                "APPLICATION.VERSION": version,
-                "SPRING.PROFILES.ACTIVE": System.getenv().containsKey("GRADLE_ENV") ? System.getenv("GRADLE_ENV") : 'dev'
+                "APPLICATION.VERSION": "${app.version}".toString(),
+                "SPRING.PROFILES.ACTIVE":  "${app.profiles}".toString()
         ]
     }
 }
