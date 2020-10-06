@@ -1,0 +1,16 @@
+version: '3'
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+  registry:
+    container_name: registry
+    image: registry:latest
+    ports:
+      - "5000:5000"
+    expose:
+      - 5000
