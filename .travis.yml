@@ -3,10 +3,6 @@ language: java
 jdk:
   - openjdk11
 
-branches:
-  only:
-    - master
-
 cache:
   bundler: true
   directories:
