@@ -25,11 +25,16 @@ before_deploy:
   - chmod 600 ./id_rsa
   - ssh-add ./id_rsa
   - rsync -r provision/frs-pvs/deploy/ ubuntu@193.123.236.99:deploy/
+  - ssh ubuntu@193.123.236.99 chmod +x ./deploy/deploy.sh
+  - ssh ubuntu@193.123.236.99 chmod +x ./deploy/health-check.sh
 
 deploy:
   skip_cleanup: true
   provider: script
   script: "./gradlew :frs-app-console:jib"
+
+after_deploy:
+  - ssh ubuntu@193.123.236.99 ./deploy/deploy.sh
 
 notifications:
   email:
