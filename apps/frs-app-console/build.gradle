@@ -49,8 +49,8 @@ jib {
         image = 'adoptopenjdk/openjdk11:alpine-jre'
     }
     to {
-        image =  "docker.pkg.github.com/ballgaveship/food_reservation_system_server/frs-admin"
-        tags = ["1.0.0", "latest"]
+        image =  "${app.docker.registryHost}"
+        tags = ["${app.version}".toString(), "latest"]
         auth {
             username = 'ballgaveship'
             password = file("../../github_package.txt").text

@@ -2,22 +2,22 @@
 profiles: local
 version: 1.0.0-SNAPSHOT
 docker:
-  registryHost: 193.123.236.99:5000/frs-admin
+  registryHost: docker.pkg.github.com/ballgaveship/food_reservation_system_server/frs-admin
 
 ---
 profiles: dev
 version: 1.0.0-SNAPSHOT
 docker:
-  registryHost: 193.123.236.99:5000/frs-admin
+  registryHost: docker.pkg.github.com/ballgaveship/food_reservation_system_server/frs-admin
 
 ---
 profiles: preprod
 version: 1.0.0-SNAPSHOT
 docker:
-  registryHost: 193.123.236.99:5000/frs-admin
+  registryHost: docker.pkg.github.com/ballgaveship/food_reservation_system_server/frs-admin
 
 ---
 profiles: prod
 version: 1.0.0-SNAPSHOT
 docker:
-  registryHost: 193.123.236.99:5000/frs-admin
+  registryHost: docker.pkg.github.com/ballgaveship/food_reservation_system_server/frs-admin
