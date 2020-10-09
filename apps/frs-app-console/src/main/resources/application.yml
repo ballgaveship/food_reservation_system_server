@@ -15,6 +15,16 @@ spring:
   output:
     ansi:
       enabled: never
+  r2dbc:
+    url: ${FRS_R2DBC_POSTGRES_URL:}
+    username: ${FRS_R2DBC_POSTGRES_USERNAME:}
+    password: ${FRS_R2DBC_POSTGRES_PASSWORD:}
+    pool:
+      enabled: true
+      initial-size: 1
+      max-size: 10
+      max-idle-time: 10m
+      validation-query: SELECT 1
 
 #####################################
 ## ACTUATOR
