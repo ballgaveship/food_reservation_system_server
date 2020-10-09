@@ -4,6 +4,9 @@
 server:
   port: 9010
 
+#####################################
+## SPRING
+#####################################
 spring:
   application:
     name: frs-console
@@ -12,6 +15,42 @@ spring:
   output:
     ansi:
       enabled: never
+
+#####################################
+## ACTUATOR
+#####################################
+management:
+  endpoints:
+    web:
+      base-path: "/frs/v1/"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+        allowedHeaders: "*"
+        allowCredentials: true
+      exposure:
+        include: "*"
+  metrics:
+    enable:
+      process:
+        files: false
+        cpu: false
+      jvm:
+        buffer: false
+        classes: false
+      hikaricp: false
+      system: false
+      jdbc: false
+      logback: false
+      cache: false
+    web:
+      server:
+        request:
+          autotime:
+            enabled: true
+    tags:
+      application: ${spring.application.name}
+
 
 ---
 spring:

@@ -3,33 +3,39 @@ language: java
 jdk:
   - openjdk11
 
-branches:
-  only:
-    - master
-
 cache:
   bundler: true
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+addons:
+  ssh_known_hosts:
+    - 193.123.236.99
+
 before_install:
   - chmod +x gradlew
   - openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in id_rsa.enc -out id_rsa -d
+  - openssl aes-256-cbc -K $encrypted_9c35eff09c74_key -iv $encrypted_9c35eff09c74_iv -in github_package.txt.enc -out github_package.txt -d
 
 script: "./gradlew :frs-app-console:build"
 
 before_deploy:
+  - ./gradlew :frs-app-console:jib
   - eval "$(ssh-agent -s)"
   - chmod 600 ./id_rsa
-  - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-add ./id_rsa
-  - ssh -i ./id_rsa ubuntu@193.123.236.99 pwd
+  - 'rsync -r provision/frs-pvs/deploy/ ubuntu@193.123.236.99:'
+  - ssh ubuntu@193.123.236.99 chmod +x ./deploy.sh
+  - ssh ubuntu@193.123.236.99 chmod +x ./health-check.sh
 
 deploy:
   skip_cleanup: true
   provider: script
-  script: "./gradlew :frs-app-console:jib"
+  script: "ssh ubuntu@193.123.236.99 ./deploy.sh"
+
+after_deploy:
+  - ssh ubuntu@193.123.236.99 ./health-check.sh
 
 notifications:
   email:

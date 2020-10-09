@@ -49,9 +49,12 @@ jib {
         image = 'adoptopenjdk/openjdk11:alpine-jre'
     }
     to {
-        // If you want to change aws credential, use environment variable in gradle task.(AWS_PROFILE={profile})
         image =  "${app.docker.registryHost}"
         tags = ["${app.version}".toString(), "latest"]
+        auth {
+            username = 'ballgaveship'
+            password = file("../../github_package.txt").text
+        }
     }
     allowInsecureRegistries = true
     container {
