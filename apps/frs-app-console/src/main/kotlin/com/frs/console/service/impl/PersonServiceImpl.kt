@@ -10,9 +10,8 @@ import org.springframework.stereotype.Service
 class PersonServiceImpl(
         val personRepository: PersonRepository
 ) : PersonService {
-    override suspend fun findPerson(personId: Int): Person {
+    override suspend fun findPerson(personId: Int): Person? {
         return personRepository.findById(personId)
-                .awaitFirst()
 //        return personRepository.findByName("tester")
 //                .awaitFirst()
     }

@@ -3,15 +3,10 @@ package com.frs.console.repository
 import com.frs.console.config.TestH2DbConfig
 import com.frs.console.domain.person.Person
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.reactive.asFlow
-import kotlinx.coroutines.reactive.awaitFirst
-import kotlinx.coroutines.reactive.awaitFirstOrNull
-import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestConstructor
@@ -37,7 +32,6 @@ class PersonRepositoryTest(private val personRepository: PersonRepository) {
                         name,
                         "$name@test.com"
                 ))
-                .awaitFirst()
     }
 
     @Test
@@ -47,8 +41,7 @@ class PersonRepositoryTest(private val personRepository: PersonRepository) {
             val person = savePerson(name)
             val findPerson = personRepository
                     .findById(person.id ?: 0)
-                    .awaitSingle()
-            assertEquals(name, findPerson.name)
+            assertEquals(name, findPerson?.name)
         }
     }
 
@@ -61,7 +54,6 @@ class PersonRepositoryTest(private val personRepository: PersonRepository) {
             }
             val personList = personRepository
                     .findByName(name)
-                    .asFlow()
                     .toList()
             assertTrue(personList
                     .filter { it.name == "person" }
@@ -81,10 +73,8 @@ class PersonRepositoryTest(private val personRepository: PersonRepository) {
             )
             personRepository
                     .save(copiedPerson)
-                    .awaitFirst()
             val findPerson   = personRepository
                     .findById(person.id ?: 0)
-                    .awaitFirstOrNull()
             assertEquals(email, findPerson?.email)
         }
     }
@@ -96,10 +86,8 @@ class PersonRepositoryTest(private val personRepository: PersonRepository) {
             val person = savePerson(name)
             personRepository
                     .deleteById(person.id ?: 0)
-                    .subscribe()
             val findPerson = personRepository
                     .findById(person.id ?: 0)
-                    .awaitFirstOrNull()
             assertTrue(findPerson == null)
         }
     }

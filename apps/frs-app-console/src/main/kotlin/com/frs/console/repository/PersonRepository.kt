@@ -1,11 +1,11 @@
 package com.frs.console.repository
 
 import com.frs.console.domain.person.Person
-import org.springframework.data.repository.reactive.ReactiveSortingRepository
+import kotlinx.coroutines.flow.Flow
+import org.springframework.data.repository.kotlin.CoroutineSortingRepository
 import org.springframework.stereotype.Repository
-import reactor.core.publisher.Flux
 
 @Repository
-interface PersonRepository : ReactiveSortingRepository<Person, Int> {
-    fun findByName(name: String): Flux<Person>
+interface PersonRepository : CoroutineSortingRepository<Person, Int> {
+    fun findByName(name: String): Flow<Person>
 }

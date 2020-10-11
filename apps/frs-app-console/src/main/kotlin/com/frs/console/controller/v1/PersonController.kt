@@ -16,9 +16,9 @@ class PersonController(
 ) {
     @GetMapping("/{personId}")
     suspend fun getPerson(@PathVariable personId: Int): ResponseEntity<Person> {
-        val user = personService.findPerson(personId)
+        val person = personService.findPerson(personId)
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(user)
+                .body(person)
     }
 }
