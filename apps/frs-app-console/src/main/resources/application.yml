@@ -65,12 +65,15 @@ management:
 ---
 spring:
   profiles:
-    - dev
+    - local
+
+application:
+  version: 0.0.1-TEST
 
 ---
 spring:
   profiles:
-    - preprod
+    - dev
 
 ---
 spring:
