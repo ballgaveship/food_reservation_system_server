@@ -6,6 +6,6 @@ import org.springframework.data.repository.kotlin.CoroutineSortingRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface PersonRepository : CoroutineSortingRepository<Person, Int> {
+interface PersonRepository : CoroutineSortingRepository<Person, Int>, CustomPersonRepository {
     fun findByName(name: String): Flow<Person>
 }

@@ -13,8 +13,14 @@ CREATE TABLE role
 (
     id int(8) NOT NULL AUTO_INCREMENT,
     key varchar(10) NOT NULL,
-    title varchar(100) NOT NULL,
+    title varchar(100) NULL,
     PRIMARY KEY (id)
 );
 
-insert into role (key, title) values ('ADMIN', 'ADMIN');
+CREATE TABLE person_role
+(
+    person_id int(8) NOT NULL,
+    role_id int(8) NOT NULL,
+    foreign key (person_id) references person(id),
+    foreign key (role_id) references role(id)
+);

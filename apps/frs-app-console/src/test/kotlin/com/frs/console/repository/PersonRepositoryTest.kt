@@ -92,5 +92,16 @@ class PersonRepositoryTest(private val personRepository: PersonRepository) {
         }
     }
 
-    // TODO: check join table
+    @Test
+    fun `find roleKey test`() {
+        runBlocking {
+            val personList = personRepository
+                    .findByRoleKey("ADMIN")
+                    .toList()
+            assertTrue(personList
+                    .filter { it.name == "tester" }
+                    .size == 1
+            )
+        }
+    }
 }
