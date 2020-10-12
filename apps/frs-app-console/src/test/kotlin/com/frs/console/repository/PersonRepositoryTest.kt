@@ -48,16 +48,13 @@ class PersonRepositoryTest(private val personRepository: PersonRepository) {
     @Test
     fun `list persons`() {
         runBlocking {
-            val name = "person"
-            for (i in 1..2) {
-                savePerson(name)
-            }
+            val name = "tester"
             val personList = personRepository
                     .findByName(name)
                     .toList()
             assertTrue(personList
-                    .filter { it.name == "person" }
-                    .size == 2
+                    .filter { it.name == name }
+                    .size == 1
             )
         }
     }
