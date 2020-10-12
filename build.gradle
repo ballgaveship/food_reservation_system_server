@@ -47,20 +47,13 @@ buildscript {
         classpath("com.epages:restdocs-api-spec-gradle-plugin:$VERSIONS.restdocEpageVersion")
 
         classpath("org.asciidoctor:asciidoctorj-pdf:$VERSIONS.asciidocterPdfVersion")
-        // aws
-        classpath("com.amazonaws:aws-java-sdk-core:$VERSIONS.awsSdkVersion")
-
-        // ssh
-        classpath("org.hidetake:gradle-ssh-plugin:$VERSIONS.sshPluginVersion")
     }
 
     ext {
-        SSH_GRADLE = "$rootDir/gradle/ssh.gradle"
         DOCKER_JIB_GRADLE = "$rootDir/gradle/jib.gradle"
         SPRINGBOOT_GRADLE = "$rootDir/gradle/springboot.gradle"
         KOTLIN_GRADLE = "$rootDir/gradle/kotlin.gradle"
         REACTIVE_GRADLE = "$rootDir/gradle/reactive.gradle"
-        JOOQ_GRADLE = "$rootDir/gradle/jooq.gradle"
         LIQUIBASE_GRADLE = "$rootDir/gradle/liquibase.gradle"
         DOCUMENT_GRADLE = "$rootDir/gradle/document.gradle"
     }
