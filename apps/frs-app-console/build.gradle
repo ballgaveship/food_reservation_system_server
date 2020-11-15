@@ -73,7 +73,7 @@ jib {
         environment = [
                 "TZ": "UTC",
                 "APPLICATION.VERSION": "${app.version}".toString(),
-                "SPRING.PROFILES.ACTIVE":  "${app.profiles}".toString()
+                "SPRING.PROFILES.ACTIVE": System.getenv().containsKey("GRADLE_ENV") ? System.getenv("GRADLE_ENV") : 'dev'
         ]
     }
 }
