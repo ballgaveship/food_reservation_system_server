@@ -7,7 +7,6 @@ buildscript {
         }
     }
 
-
     def versions = new Properties()
     if (file("$rootDir/version.properties").exists()) {
         file("$rootDir/version.properties").withInputStream { versions.load(it) }

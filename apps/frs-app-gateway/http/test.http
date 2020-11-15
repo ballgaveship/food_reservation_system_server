@@ -1,0 +1,5 @@
+GET http://localhost:8080/frs/console/v1/menus/test
+
+
+###
+GET http://localhost:9010/frs/console/v1/menus/test

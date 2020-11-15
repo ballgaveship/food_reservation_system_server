@@ -1,0 +1,17 @@
+---
+profiles: local
+version: 1.0.0-SNAPSHOT
+docker:
+  registryHost: docker.pkg.github.com/ballgaveship/food_reservation_system_server/frs-gateway
+
+---
+profiles: dev
+version: 1.0.0-SNAPSHOT
+docker:
+  registryHost: docker.pkg.github.com/ballgaveship/food_reservation_system_server/frs-gateway
+
+---
+profiles: prod
+version: 1.0.0-SNAPSHOT
+docker:
+  registryHost: docker.pkg.github.com/ballgaveship/food_reservation_system_server/frs-gateway

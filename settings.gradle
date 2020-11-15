@@ -7,7 +7,7 @@ rootProject.name = 'frs_server'
         projectDir.mkdirs()
     }
 
-    ['frs-app-console'].each {
+    ['frs-app-config-server', 'frs-app-discovery', 'frs-app-gateway', 'frs-app-console'].each {
         def subProjectDir = new File(projectDir, it)
 
         if( !subProjectDir.exists() ) {

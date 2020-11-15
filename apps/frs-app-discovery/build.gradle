@@ -1,0 +1,62 @@
+apply from: SPRINGBOOT_GRADLE
+apply from: KOTLIN_GRADLE
+apply from: REACTIVE_GRADLE
+apply from: DOCKER_JIB_GRADLE
+
+dependencies {
+    // spring boot
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
+
+    // spring cloud
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server")
+    implementation("org.springframework.cloud:spring-cloud-config-client")
+
+    // validation
+    kapt('org.hibernate:hibernate-validator-annotation-processor')
+    annotationProcessor('org.hibernate:hibernate-validator-annotation-processor')
+
+    // test
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation('org.junit.jupiter:junit-jupiter-api')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+}
+
+bootRun {
+    systemProperty "spring.profiles.active", "${app.profiles}"
+    systemProperty "application.version", "${app.version}"
+}
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = true
+}
+
+// use JAVA_TOOL_OPTIONS for additional properties
+jib {
+    from {
+        image = 'adoptopenjdk/openjdk11:alpine-jre'
+    }
+    to {
+        image =  "${app.docker.registryHost}"
+        tags = ["${app.version}".toString(), "latest"]
+        auth {
+            username = 'ballgaveship'
+            password = file("../../github_package.txt").text
+        }
+    }
+    allowInsecureRegistries = true
+    container {
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        ports = ['8761']
+        environment = [
+                "TZ": "UTC",
+                "APPLICATION.VERSION": "${app.version}".toString(),
+                "SPRING.PROFILES.ACTIVE":  "${app.profiles}".toString()
+        ]
+    }
+}

@@ -1,0 +1,123 @@
+#####################################
+## SPRING
+#####################################
+spring:
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    #####################################
+    ## GATEWAY
+    #####################################
+    gateway:
+      enabled: true
+      httpserver:
+        wiretap: false # for Debug: Set log level to debug for reactor netty httpserver
+      metrics:
+        enabled: false
+        tags:
+          application: ${spring.application.name}
+          environment: ${spring.profiles}
+      # SEE: org.springframework.cloud.gateway.config.GlobalCorsProperties
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: '*'
+            allowedMethods: '*'
+            allowedHeaders: '*'
+            allowCredentials: true
+      # SEE: org.springframework.cloud.gateway.config.HttpClientProperties
+      httpclient:
+        pool:
+          max-connections: 300
+        response-timeout: 3s
+        connect-timeout: 10
+        wiretap: false # for Debug: Set log level to debug for reactor netty httpclient
+      default-filters:
+        - CircuitBreaker=myCircuitBreaker
+        - name: RequestSize
+          args:
+            maxSize: 5000000
+        - name: Retry
+          args:
+            retries: 3
+            statuses:
+              - BAD_GATEWAY
+              - INTERNAL_SERVER_ERROR
+            methods:
+              - GET
+              - POST
+              - PATCH
+              - PUT
+              - DELETE
+            backoff:
+              firstBackoff: 10ms
+              maxBackoff: 50ms
+              factor: 2
+              basedOnPreviousValue: true
+            exceptions:
+              - org.springframework.cloud.gateway.support.TimeoutException
+              - java.io.IOException
+              - java.util.concurrent.TimeoutException
+      routes:
+        - id: console
+          uri: lb://frs-console
+          predicates:
+            - Path=/frs/console/**
+#        - id: circuitbreaker_route  # circuit-breaker pattern
+#            uri: lb://backing-service
+#            predicates:
+#              - Path=/consumingServiceEndpoint
+#            filters:
+#              - name: CircuitBreaker
+#                args:
+#                  name: myCircuitBreaker
+#                  fallbackUri: forward:/inCaseOfFailureUseThis
+#              - RewritePath=/consumingServiceEndpoint, /backingServiceEndpoint
+
+#####################################
+## DISCOVERY
+#####################################
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+
+#####################################
+## ACTUATOR
+#####################################
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+        allowedHeaders: "*"
+        allowCredentials: true
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: false
+  metrics:
+    enable:
+      process:
+        files: false
+        cpu: false
+      jvm:
+        buffer: false
+        classes: false
+      system: false
+      logback: false
+      cache: false
+    web:
+      server:
+        request:
+          autotime:
+            enabled: true
+    tags:
+      application: ${spring.application.name}

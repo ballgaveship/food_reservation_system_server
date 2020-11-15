@@ -1,0 +1,55 @@
+#####################################
+## SPRING
+#####################################
+spring:
+  r2dbc:
+    url: ${FRS_R2DBC_POSTGRES_URL:}
+    username: ${FRS_R2DBC_POSTGRES_USERNAME:}
+    password: ${FRS_R2DBC_POSTGRES_PASSWORD:}
+    pool:
+      enabled: true
+      initial-size: 1
+      max-size: 10
+      max-idle-time: 10m
+      validation-query: SELECT 1
+
+#####################################
+## ACTUATOR
+#####################################
+management:
+  endpoints:
+    web:
+      base-path: "/frs/v1/"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+        allowedHeaders: "*"
+        allowCredentials: true
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+#####################################
+## DISCOVERY
+#####################################
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+
+
+---
+spring:
+  profiles:
+    - dev
+
+---
+spring:
+  profiles:
+    - prod
