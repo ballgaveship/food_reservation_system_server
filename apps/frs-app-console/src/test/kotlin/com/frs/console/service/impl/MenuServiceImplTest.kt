@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestConstructor
+import java.util.*
 
 @ActiveProfiles("local")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -13,7 +14,7 @@ class MenuServiceImplTest(private val menuServiceImpl: MenuServiceImpl) {
 
     @Test
     fun `get menu by menuId`() {
-        val menuId = "testMenu"
+        val menuId = UUID.randomUUID()
         val menu = menuServiceImpl.findMenu(menuId)
 
         assertEquals(menuId, menu.id)

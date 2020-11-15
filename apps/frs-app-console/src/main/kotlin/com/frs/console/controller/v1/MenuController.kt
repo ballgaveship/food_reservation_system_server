@@ -1,20 +1,44 @@
 package com.frs.console.controller.v1
 
-import com.frs.console.domain.menu.Menu
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import com.frs.console.domain.menu.*
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
-@RequestMapping("frs/v1/menus")
+@RequestMapping("frs/console/v1/menus")
 class MenuController {
-    @GetMapping("/{menuId}")
-    suspend fun getMenu(@PathVariable menuId: String): ResponseEntity<Menu> {
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Menu(menuId))
+    @GetMapping("/{id}")
+    suspend fun getMenu(@PathVariable id: String): Menu {
+        return Menu(UUID.randomUUID(), "test", "test")
+    }
+
+    @GetMapping
+    suspend fun getMenus(@ModelAttribute getMenusRequest: GetMenusRequest): GetMenusResponse {
+        TODO()
+    }
+
+    @PostMapping
+    suspend fun createMenus(@ModelAttribute createMenusRequest: CreateMenusRequest): CreateMenusResponse {
+        TODO()
+    }
+
+    @PutMapping("/{menuId}")
+    suspend fun updateMenu(@PathVariable menuId: String, @ModelAttribute updateMenuRequest: UpdateMenuRequest): UpdateMenuResponse {
+        TODO()
+    }
+
+    @DeleteMapping("/{menuId}")
+    suspend fun deleteMenu(@PathVariable menuId: String, @ModelAttribute deleteMenuRequest: DeleteMenuRequest): DeleteMenuResponse {
+        TODO()
+    }
+
+    @DeleteMapping
+    suspend fun deleteMenus(@ModelAttribute deleteMenusRequest: DeleteMenusRequest): DeleteMenusResponse {
+        TODO()
+    }
+
+    @PostMapping("/action")
+    suspend fun actionMenu(@ModelAttribute actionMenuRequest: ActionMenuRequest): ActionMenuResponse {
+        TODO()
     }
 }

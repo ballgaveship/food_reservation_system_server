@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("frs/v1/persons")
+@RequestMapping("frs/console/v1/persons")
 class PersonController(
         val personService: PersonService
 ) {
